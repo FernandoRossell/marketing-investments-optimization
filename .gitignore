@@ -1,27 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
 
-# Data files (never tracked)
-*.csv
-*.xlsx
+# Environment / secrets
+.env
+*.env
+
+# Data (no subir raw ni outputs pesados)
+/data/raw/*
+/data/processed/*
+/data/features/*
+/data/synthetic/*
+!/data/raw/sales/.gitkeep
+!/data/raw/marketing/.gitkeep
+!/data/processed/.gitkeep
+!/data/features/.gitkeep
+!/data/synthetic/.gitkeep
+!/data/README.md
+
+# Artifacts / models / mlops state
+mlruns/
+models/
+artifacts/
+*.pkl
+*.joblib
+*.onnx
 *.parquet
 *.feather
 
-data/
-datasets/
+# Airflow / logs
+airflow/logs/
+airflow/plugins/__pycache__/
+airflow/__pycache__/
+logs/
 
-# Config & environment files
-*.toml
-*.config
-*.env
-*.yaml
-*.yml
-
-# Jupyter & Python artifacts
+# Notebooks
 .ipynb_checkpoints/
-*/.ipynb_checkpoints/
 
-__pycache__/
-*.pyc
-
-# OS files
+# OS / IDE
 .DS_Store
-Thumbs.db
+.vscode/
+.idea/

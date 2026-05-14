@@ -1,0 +1,5 @@
+reference_dataset: train_reference
+current_dataset: scoring_current
+thresholds:
+  dataset_drift_share: 0.5
+  score_psi: 0.2

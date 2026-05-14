@@ -1,0 +1,4 @@
+name: raw_checkpoint_placeholder
+config_version: 1.0
+class_name: Checkpoint
+validations: []

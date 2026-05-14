@@ -1,0 +1,26 @@
+mmm_models:
+  - name: bayesian_mmm
+    enabled: true
+  - name: ridge_regression_mmm
+    enabled: true
+  - name: baseline_regression_mmm
+    enabled: true
+
+uplift_models:
+  - name: two_model_approach
+    enabled: true
+  - name: t_learner
+    enabled: true
+  - name: x_learner
+    enabled: false
+
+evaluation:
+  mmm_metrics:
+    - mape
+    - smape
+    - wmape
+    - holdout_r2
+  uplift_metrics:
+    - auuc
+    - qini
+    - uplift_at_k

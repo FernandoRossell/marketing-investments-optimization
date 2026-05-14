@@ -1,0 +1,4 @@
+date,store,channel,spend,treatment_flag
+2013-01-01,1,social,100,1
+2013-01-02,1,social,80,0
+2013-01-03,1,social,120,1

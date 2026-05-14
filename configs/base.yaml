@@ -1,0 +1,32 @@
+project:
+  name: retail-marketing-mmm-uplift
+  random_state: 42
+  target_column: sales
+  date_column: date
+  entity_columns: [store, item]
+
+data:
+  sales_raw_dir: data/raw/sales
+  marketing_raw_dir: data/raw/marketing
+  synthetic_dir: data/synthetic
+  processed_dir: data/processed
+  features_dir: data/features
+  sales_train_file: train.csv
+  sales_test_file: test.csv
+
+mmm:
+  enabled: true
+  target_metric: sales
+  default_channels: [tv, paid_search, social, email, promo]
+  adstock_type: geometric
+  saturation_type: hill
+
+uplift:
+  enabled: true
+  treatment_column: treatment_flag
+  outcome_column: incremental_outcome
+  policy_metric: auuc
+
+monitoring:
+  drift_threshold_pct_columns: 0.5
+  score_psi_alert: 0.2

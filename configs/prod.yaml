@@ -1,0 +1,4 @@
+environment: prod
+logging_level: INFO
+use_sample: false
+sample_fraction: 1.0

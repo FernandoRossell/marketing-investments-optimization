@@ -1,232 +1,67 @@
-# Market Forecasting & Media Mix Decision Engine
+# Retail Marketing MMM & Uplift Modeling Platform
 
-**Caso de negocio:** From Market-Level Forecasting to Budget Allocation via Media Mix Modeling
+Proyecto esqueleto para construir una plataforma end-to-end de **Marketing Mix Modeling (MMM)** y **Uplift Modeling / Incrementality** usando como base el dataset público **Store Item Demand Forecasting** y una capa de marketing adicional local o sintética.
 
-**Stack:** 
-
-**Autor:** Abel Soto
-
----
-
-## Visión general
-
-Los equipos de marketing y crecimiento suelen enfrentar decisiones críticas bajo incertidumbre:  
-¿En qué mercados invertir? ¿Qué mix de medios priorizar? ¿Cuál será el impacto esperado en ingresos o volumen?
-
-Este proyecto desarrolla un **framework analítico para forecasting por mercados y simulación de decisiones de inversión publicitaria**, utilizando **Media Mix Modeling (MMM)** como eje central. El objetivo es pasar de análisis descriptivo a un **sistema de soporte a decisiones**, capaz de evaluar escenarios y trade-offs reales de negocio.
-
-El enfoque está diseñado para reflejar problemas propios de **equipos senior de analytics en marketing, growth y estrategia comercial**.
+> **Propósito del repositorio**
+> Este proyecto está diseñado como **ejercicio de portafolio** para demostrar habilidades de data science senior / ML aplicado a marketing analytics, causal inference, time series, MLOps y software quality.
+> No está pensado como sistema productivo final ni requiere licencias empresariales o servicios de pago.
 
 ---
 
-## Objetivos del proyecto
+## Qué demuestra este proyecto
+- Forecasting y análisis temporal orientado a ventas retail
+- Marketing Mix Modeling (adstock, saturation, contribución, ROI)
+- Uplift modeling / heterogeneous treatment effects
+- Diseño de datasets causales y contrafactuales
+- Orquestación con Airflow
+- Experiment tracking y model registry con MLflow
+- Data quality, monitoring y governance
+- Testing para mantenimiento y evolución futura
 
-- Desarrollar un **forecast de ventas / ingresos a nivel mercado** incorporando dinámica temporal y estacionalidad.
-- Estimar el impacto incremental de distintos **canales de marketing** usando Media Mix Modeling.
-- Descomponer el desempeño por:
-  - Tendencias base
-  - Estacionalidad
-  - Inversión en medios
-- Simular **escenarios de inversión** y reasignación de presupuesto entre mercados y canales.
-- Evaluar decisiones utilizando métricas de negocio:
-  - Revenue incremental
-  - ROI
-  - Marginal return por canal
-- Traducir resultados analíticos en **recomendaciones accionables para la toma de decisiones estratégicas**.
+## Restricciones consideradas
+### 1. Sin licencias de pago
+La arquitectura se apoya en herramientas open source y ejecución local.
 
----
+### 2. Sin subir CSV raw al repositorio
+La data raw se descarga manualmente y se mantiene fuera del control de versiones.
 
-## Fuente de los datos
+### 3. Testing para mantenimiento futuro
+El repo ya incluye estructura de pruebas unitarias, integración y fixtures sintéticos.
 
-### Dataset principal
-
-El análisis se basa en un dataset público de ventas retail utilizado comúnmente para problemas de **forecasting de demanda** y análisis temporal:
-
-**Store Item Demand Forecasting Dataset**  
-- Plataforma: Kaggle  
-- Frecuencia: Diaria  
-- Nivel de granularidad: Tienda – Producto – Fecha  
-
-El dataset contiene información histórica de ventas a nivel transaccional, incluyendo:
-- Fecha
-- Identificador de tienda
-- Identificador de producto
-- Unidades vendidas
-
-Este tipo de dataset es representativo de entornos reales de retail y permite construir series de tiempo robustas para análisis por mercado.
+### 4. Limitación importante del dataset base
+El dataset de Kaggle está orientado a forecasting de demanda y contiene fundamentalmente `date`, `store`, `item` y `sales`. Para un proyecto de MMM/uplift necesitas **variables adicionales de marketing** (por ejemplo spend, impressions, promos, campañas, grupos treatment/control). Este repo asume una de estas dos opciones:
+- **Opción A:** tú aportarás una tabla local de marketing / campañas.
+- **Opción B:** generarás una capa sintética de marketing para demostrar metodología causal y de MMM.
 
 ---
 
-### Construcción de mercados
+## Política de datos
+**Sí se sube:** código, documentación, DAGs, configs, tests, muestras sintéticas pequeñas.  
+**No se sube:** raw CSV, outputs pesados, modelos binarios grandes, credenciales.
 
-Para los fines de este proyecto, las tiendas se agrupan en **mercados geográficos agregados** (por ejemplo, regiones o clusters de tiendas).  
-Este paso permite escalar el análisis desde un nivel operativo hacia un **nivel estratégico**, alineado con decisiones de marketing y asignación presupuestaria.
-
-El proceso incluye:
-- Agregación temporal (diaria → semanal o mensual)
-- Agregación espacial (tienda → mercado)
-- Normalización de series para comparación entre mercados
-
----
-
-### Variables de marketing (sintéticas)
-
-Dado que los datasets públicos de retail no contienen información de inversión publicitaria, se generan variables de marketing **sintéticas pero realistas**, con el objetivo de habilitar el análisis mediante Media Mix Modeling.
-
-Las variables incluyen:
-- Inversión por canal (TV, Digital, Search, Social)
-- Distribución temporal del gasto
-- Diferencias de intensidad por mercado
-
-Estas variables se construyen bajo supuestos explícitos y rangos razonables, y se utilizan exclusivamente para **simular escenarios de toma de decisión**, no para representar datos reales de una empresa específica.
+Ver también:
+- `docs/assumptions_and_constraints.md`
+- `docs/testing_strategy.md`
+- `docs/implementation_plan_6_weeks.md`
 
 ---
 
-### Justificación del uso de datos sintéticos
-
-El uso de variables sintéticas en el componente de Media Mix Modeling es una práctica común en proyectos demostrativos, dado que:
-- Los datos reales de inversión publicitaria suelen ser confidenciales
-- La estructura del problema es más relevante que los valores exactos
-- Permite evaluar decisiones, trade-offs y escenarios de forma controlada
-
-Todos los supuestos asociados a estas variables son documentados y analizados en secciones posteriores del proyecto.
-
----
-
-### Variables de marketing (sintéticas pero realistas)
-
-Para el desarrollo del Media Mix Model se generan variables sintéticas documentadas, tales como:
-- Inversión por canal (TV, Digital, Search, Social, etc.)
-- Intensidad publicitaria
-- Lags y efectos carry-over (adstock)
-
-> Estas variables permiten simular un entorno de decisión realista, alineado con prácticas comunes en marketing analytics, sin representar datos específicos de una empresa real.
+## Quickstart
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+docker compose up -d
+make test
+```
 
 ---
 
-## Enfoque analítico
-
-### Forecasting por mercado
-
-- Modelos de series de tiempo:
-  - Baseline estadístico (ARIMA / SARIMAX)
-  - Modelos con regresores externos (marketing, estacionalidad)
-- Validación temporal estricta
-- Evaluación por mercado:
-  - Error absoluto y relativo
-  - Estabilidad del forecast
-
-El forecast sirve como **baseline contrafactual** para medir impacto incremental.
-
----
-
-### Media Mix Modeling (MMM)
-
-El MMM busca estimar el impacto causal aproximado de cada canal sobre el resultado de negocio.
-
-Componentes principales:
-- Tendencia base
-- Estacionalidad
-- Variables de marketing con:
-  - Adstock
-  - Saturación
-- Efectos específicos por mercado
-
-El modelo permite responder preguntas como:
-- ¿Qué canal genera mayor retorno marginal?
-- ¿Dónde existe saturación?
-- ¿Qué mercados responden mejor a inversión incremental?
-
----
-
-### Simulación de escenarios
-
-A partir del modelo estimado, se simulan escenarios como:
-- Incremento/reducción de presupuesto total
-- Reasignación entre canales
-- Reasignación entre mercados
-
-Cada escenario se evalúa usando KPIs de negocio para soportar decisiones estratégicas.
-
----
-
-## Testing & Validación
-*(Sección a completar)*
-
--  
--  
--  
-
----
-
-## Análisis de Hot Spots del modelo
-*(Sección a completar)*
-
--  
--  
--  
-
----
-
-## Supuestos asumidos
-*(Sección a completar)*
-
--  
--  
--  
-
----
-
-## ¿Dónde se rompen los supuestos?
-*(Sección a completar)*
-
--  
--  
--  
-
----
-
-## Posible implementación en producción
-*(Sección a completar)*
-
-**Arquitectura propuesta**
--  
--  
--  
-
-**Uso por negocio**
--  
--  
--  
-
----
-
-## Resultados esperados
-
-El sistema permite:
-
-- Forecasts más robustos por mercado
-- Cuantificar impacto incremental real de marketing
-- Identificar canales y mercados con mayor retorno
-- Optimizar la asignación de presupuesto bajo escenarios realistas
-
-> Los valores numéricos dependen de los supuestos y escenarios modelados.
-
----
-
-## Extensiones futuras
-
-- Modelos jerárquicos entre mercados
-- Incorporación de pricing y promociones
-- Optimización automática de presupuesto
-- Integración con dashboards de decisión ejecutiva
-
----
-
-## Conclusión
-
-Este proyecto demuestra cómo combinar **forecasting temporal y Media Mix Modeling** para evolucionar desde reporting descriptivo hacia un **motor de simulación y toma de decisiones estratégicas** en marketing.
-
-El foco está en **impacto en negocio, escenarios y trade-offs**, reflejando el trabajo esperado de perfiles senior en marketing analytics y growth.
-
----
+## Rutas clave
+- `data/raw/sales/` → aquí colocas manualmente los CSV de Kaggle
+- `data/raw/marketing/` → aquí colocas manualmente tu dataset de campañas / spend si lo tienes
+- `data/synthetic/` → aquí puedes generar marketing sintético localmente
+- `data/processed/` → salidas intermedias locales
+- `data/features/` → featuresets locales
+- `docs/implementation_plan_6_weeks.md` → plan principal de trabajo
+- `docs/testing_strategy.md` → estrategia de testeo y mantenibilidad

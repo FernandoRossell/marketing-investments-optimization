@@ -1,0 +1,4 @@
+environment: dev
+logging_level: INFO
+use_sample: true
+sample_fraction: 0.2
