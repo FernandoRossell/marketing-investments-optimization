@@ -32,7 +32,7 @@ The project is built on the public **[Store Item Demand Forecasting](https://www
 | Capability | Details |
 |---|---|
 | **Time Series Forecasting** | Sales forecasting at market level; trend, seasonality, and store/item hierarchy handling |
-| **Market Aggregation** | Store → market rollup (daily → weekly/monthly), normalized for cross-market comparison |
+| **Market Aggregation** | Store -> market rollup (daily -> weekly/monthly), normalized for cross-market comparison |
 | **Media Mix Modeling** | Adstock transformations, Hill saturation curves, channel contribution decomposition, ROI estimation |
 | **Uplift Modeling** | Heterogeneous treatment effects - S-learner, T-learner, meta-learner approaches |
 | **Budget Optimization** | Marginal return curves, scenario analysis, channel budget reallocation recommendations |
@@ -67,45 +67,45 @@ The project is built on the public **[Store Item Demand Forecasting](https://www
 Store Item Demand Data (Kaggle)  +  Synthetic Marketing Layer
             │                              │
             └──────────────┬──────────────┘
-                           ▼
+                           v
             ┌──────────────────────────────┐
-            │   Ingestion & Validation      │  ← sales_ingestion_dag
+            │   Ingestion & Validation      │  <- sales_ingestion_dag
             │   Great Expectations checks   │    marketing_ingestion_dag
             └──────────────┬───────────────┘
                            │
-                           ▼
+                           v
             ┌──────────────────────────────┐
-            │   Feature Engineering         │  ← feature_pipeline_dag
+            │   Feature Engineering         │  <- feature_pipeline_dag
             │   Adstock · Saturation        │    adstock.py · lag_features.py
             │   Calendar · Panel build      │    calendar_features.py
             └──────────────┬───────────────┘
                            │
               ┌────────────┴─────────────┐
-              ▼                          ▼
+              v                          v
   ┌─────────────────────┐   ┌────────────────────────┐
   │   MMM Training       │   │   Uplift Training       │
-  │   Bayesian · Ridge   │   │   Meta-learners         │  ← MLflow tracking
+  │   Bayesian · Ridge   │   │   Meta-learners         │  <- MLflow tracking
   │   Baseline           │   │   Two-model approach    │
   └──────────┬──────────┘   └───────────┬────────────┘
              │                          │
              └─────────────┬────────────┘
-                           ▼
+                           v
             ┌──────────────────────────────┐
-            │   Evaluation & Attribution    │  ← scoring_and_budget_dag
+            │   Evaluation & Attribution    │  <- scoring_and_budget_dag
             │   ROI decomp · AUUC · Qini   │
             └──────────────┬───────────────┘
                            │
               ┌────────────┴─────────────┐
-              ▼                          ▼
+              v                          v
   ┌─────────────────────┐   ┌────────────────────────┐
   │   Budget Optimizer   │   │   FastAPI Endpoint      │
   │   Scenario analysis  │   │   /recommend            │
   │   Marginal returns   │   │   RecommendationResponse│
   └─────────────────────┘   └────────────────────────┘
                            │
-                           ▼
+                           v
             ┌──────────────────────────────┐
-            │   Monitoring                  │  ← monitoring_dag
+            │   Monitoring                  │  <- monitoring_dag
             │   Evidently drift · Alerts    │
             └──────────────────────────────┘
 ```
@@ -231,20 +231,6 @@ marketing-investments-optimization/
 
 **Monitoring from day one.** Evidently AI drift config and alert modules are built into the architecture, reflecting that distribution shift is the dominant failure mode for models deployed over time.
 
----
-
-## Data Policy
-
-| What | Status |
-|---|---|
-| Source code, DAGs, configs | ✅ Versioned |
-| Tests & synthetic fixtures | ✅ Versioned |
-| Notebooks & documentation | ✅ Versioned |
-| Model card template | ✅ Versioned |
-| Raw CSVs, model binaries | ❌ Git-ignored |
-| Credentials / secrets | ❌ `.env` (see `.env.example`) |
-
-Raw data must be downloaded manually from [Kaggle](https://www.kaggle.com/c/demand-forecasting-kernels-only) and placed in `data/raw/sales/`. A synthetic marketing layer can be generated via `scripts/generate_synthetic_marketing.py`.
 
 ---
 
